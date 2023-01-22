@@ -9,7 +9,7 @@ import React from 'react'
 const Main = () => {
     return (
         <div className='h-96 group relative'>
-            <img src="src/img/sea.jpg" alt="Main Image" className="h-full w-full object-cover" />
+            <img src="https://res.cloudinary.com/dvdf3jgf9/image/upload/v1674407701/todoapp/sea_mazmdl.jpg" alt="Main Image" className="h-full w-full object-cover" />
             <div className="absolute bottom-0 w-full bg-gradient-to-b from-transparent to-u-blue">
                 <div className="container pl-10 lg:pl-0">
                     <h3 className="hidden text-u-yellow tracking-wider group-hover:mb-2 group-hover:block duration-500 font-ubebas uppercase">
