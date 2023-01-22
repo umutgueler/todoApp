@@ -10,12 +10,12 @@ const TodoDoneList = () => {
     const [isVisible, setIsVisible] = useState(false);
     const { state, dispatch } = useContext(TodoContext);
     const [todos, setTodos] = useState([]);
-    const prevTodoDoneListLength = usePrevious(todos);
+    const prevTodoDoneListLength = usePrevious(todos.length);
     const controls = useAnimationControls();
 
     useEffect(() => {
-        setTodos(state.todoNotDoneList)
-    }, [state.todoNotDoneList]);
+        setTodos(state.todoDoneList)
+    }, [state.todoDoneList]);
 
     const variants = {
         open: {

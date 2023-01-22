@@ -10,7 +10,7 @@ const TodoNotDoneList = () => {
     const [isVisible, setIsVisible] = useState(false);
     const { state, dispatch } = useContext(TodoContext);
     const [todos, setTodos] = useState([]);
-    const prevTodoNotDoneListLength = usePrevious(todos);
+    const prevTodoNotDoneListLength = usePrevious(todos.length);
     const controls = useAnimationControls();
     useEffect(() => {
         setTodos(state.todoNotDoneList)

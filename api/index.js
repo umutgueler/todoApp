@@ -67,11 +67,17 @@ app.get("/api/todoList", (req, res) => {
 });
 
 app.post("/api/todoList", (req, res) => {
+    if (Object.keys(todoList).length >= 12) {
+        res.status(400).json({
+            message: "Max Limit Todos : 12 (This is a development project)"
+        })
+
+    }
     const todo = req.body;
     const id = randomBytes(4).toString("hex");
     todo.id = id;
     todoList[id] = todo;
-    res.json(todo) 
+    res.json(todo)
 });
 
 app.get("/api/todoList/:id/done", (req, res) => {
@@ -90,6 +96,12 @@ app.get("/api/todoList/:id/wait", (req, res) => {
 });
 
 app.delete("/api/todoList/:id", (req, res) => {
+    if (Object.keys(todoList).length <= 2) {
+        res.status(400).json({
+            message: "Min Limit Todos : 2  (This is a development project)"
+        })
+
+    }
     const { id } = req.params;
     delete todoList[id];
 
@@ -98,7 +110,7 @@ app.delete("/api/todoList/:id", (req, res) => {
     })
 });
 
-app.listen(3001,()=>{
+app.listen(3001, () => {
 
 })
 
