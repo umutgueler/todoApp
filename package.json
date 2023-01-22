@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     
-    "dev": "vite nodemon api/index.js",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "api-server": "nodemon api/index.js"
