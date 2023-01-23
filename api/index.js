@@ -80,14 +80,14 @@ app.post("/api/todoList", (req, res) => {
 app.put("/api/todoList/:id/done", (req, res) => {
 
     const todo = req.body;
-    todo.done = false;
+    todo.done = true;
 
     res.status(201).json(todo)
 });
 app.put("/api/todoList/:id/wait", (req, res) => {
 
     const todo = req.body;
-    todo.done = true;
+    todo.done = false;
 
     res.status(201).json(todo)
 });

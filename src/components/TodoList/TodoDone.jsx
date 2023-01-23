@@ -75,7 +75,7 @@ const TodoDone = ({ todo }) => {
         setExitDirection("notDoneList");
         const todoId = todo.id;
 
-        await axios.put(`api/todolist/${todoId}/wait`,todo);
+        await axios.put(`api/todolist/${todoId}/wait`, todo);
 
         setIsDelete(true);
 
@@ -116,7 +116,7 @@ const TodoDone = ({ todo }) => {
 
                     dragListener={false}
                     dragControls={controls}
-                    whileDrag={{scale:1.05}}
+                    whileDrag={{ scale: 1.05 }}
                     variants={variants}
                     custom={exitDirection}
                     exit={exitDirection => {
@@ -143,13 +143,13 @@ const TodoDone = ({ todo }) => {
                     className='container flex flex-col w-full lg:w-3/5 font-ucrimson shadow-inner mt-2'
 
                 >
-                    <div className="group p-4 flex flex-col lg:flex-row lg:justify-between lg:items-center bg-gradient-to-r from-white to-green-600 lg:hover:from-pink-500 lg:hover:to-green-600 cursor-pointer header" onClick={collapseContent}>
+                    <div ref={el => headerRefs.current[0] = el} className="group p-4 flex flex-col lg:flex-row lg:justify-between lg:items-center bg-gradient-to-r from-white to-green-600 lg:hover:from-pink-500 lg:hover:to-green-600 cursor-pointer header" onClick={collapseContent}>
                         <div className='pointer-events-none'>
-                            <h3 className='lg:group-hover:scale-110 lg:group-hover:m-2 lg:group-hover:text-white lg:duration-500'>
+                            <h3 ref={el => headerRefs.current[1] = el} className='lg:group-hover:scale-110 lg:group-hover:m-2 lg:group-hover:text-white lg:duration-500'>
                                 {todo.title}
                             </h3>
 
-                            <p className="text-xs lg:group-hover:text-white duration-500 ">To finish: {todo.tofinish}</p>
+                            <p ref={el => headerRefs.current[2] = el} className="text-xs lg:group-hover:text-white duration-500 ">To finish: {todo.tofinish}</p>
                         </div>
                         <div className='space-x-5 mt-5 lg:mt-0 ml-auto'>
 
