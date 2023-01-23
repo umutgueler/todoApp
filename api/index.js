@@ -3,15 +3,18 @@ import { randomBytes } from "crypto";
 import cors from "cors"
 const app = express();
 app.use(express.json());
-app.use(cors())
+app.use(cors());
+
+
+// Fake Server
 
 const todoList = {
     id02bed948: {
         id: "id02bed948",
         title: "ACCUSANTIUM DOLOREMQUE LAUDANT...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
-        tofinish: "20.01.2023 15:24:12",
-        adddate: "20.01.2023 15:24:12",
+        tofinish: "23/01/2023, 01:10",
+        adddate: "23/01/2023, 01:10",
         done: false
     },
 
@@ -19,8 +22,8 @@ const todoList = {
         id: "idf4feaaaf",
         title: "ACCUSANTIUM DOLOREMQUE LAUDANT...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
-        tofinish: "20.01.2023 15:24:12",
-        adddate: "20.01.2023 15:24:12",
+        tofinish: "23/01/2023, 01:10",
+        adddate: "23/01/2023, 01:10",
         done: false
     },
 
@@ -28,8 +31,8 @@ const todoList = {
         id: "ide555496a",
         title: "ACCUSANTIUM DOLOREMQUE LAUDANT...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
-        tofinish: "20.01.2023 15:24:12",
-        adddate: "20.01.2023 15:24:12",
+        tofinish: "23/01/2023, 01:10",
+        adddate: "23/01/2023, 01:10",
         done: false
     },
 
@@ -37,8 +40,8 @@ const todoList = {
         id: "id146095f2",
         title: "DONE TRUEEEEE...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
-        tofinish: "20.01.2023 15:24:12",
-        adddate: "20.01.2023 15:24:12",
+        tofinish: "23/01/2023, 01:10",
+        adddate: "23/01/2023, 01:10",
         done: true
     },
 
@@ -46,8 +49,8 @@ const todoList = {
         id: "id9349822f",
         title: "DONE TRUEEE666...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
-        tofinish: "20.01.2023 15:24:12",
-        adddate: "20.01.2023 15:24:12",
+        tofinish: "23/01/2024, 12:10",
+        adddate: "23/01/2023, 01:10",
         done: true
     },
 
@@ -55,8 +58,8 @@ const todoList = {
         id: "idfaea2d77",
         title: "DONE TRUEEEE...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
-        tofinish: "20.01.2023 15:24",
-        adddate: "20.01.2023 15:24",
+        tofinish: "23/01/2023, 01:10",
+        adddate: "23/01/2023, 01:10",
         done: true
     },
 
@@ -67,43 +70,29 @@ app.get("/api/todoList", (req, res) => {
 });
 
 app.post("/api/todoList", (req, res) => {
-    if (Object.keys(todoList).length >= 12) {
-        res.status(400).json({
-            message: "Max Limit Todos : 12 (This is a development project)"
-        })
-
-    }
+    
     const todo = req.body;
     const id = randomBytes(4).toString("hex");
-    todo.id = id;
-    todoList[id] = todo;
-    res.json(todo)
+    todo.id = "id"+id;
+    res.json(todo);
 });
 
-app.get("/api/todoList/:id/done", (req, res) => {
+app.put("/api/todoList/:id/done", (req, res) => {
 
-    const { id } = req.params;
-    todoList[id].done = true;
+    const todo = req.body;
+    todo.done = false;
 
-    res.status(201).json(todoList[id])
+    res.status(201).json(todo)
 });
-app.get("/api/todoList/:id/wait", (req, res) => {
+app.put("/api/todoList/:id/wait", (req, res) => {
 
-    const { id } = req.params;
-    todoList[id].done = false;
+    const todo = req.body;
+    todo.done = true;
 
-    res.status(201).json(todoList[id])
+    res.status(201).json(todo)
 });
 
 app.delete("/api/todoList/:id", (req, res) => {
-    if (Object.keys(todoList).length <= 2) {
-        res.status(400).json({
-            message: "Min Limit Todos : 2  (This is a development project)"
-        })
-
-    }
-    const { id } = req.params;
-    delete todoList[id];
 
     res.status(200).json({
         message: "Delete operation successful"

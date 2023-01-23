@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { motion } from "framer-motion";
 import { TodoContext } from '../context/TodoState';
 import axios from 'axios';
@@ -10,12 +10,14 @@ const initialTodo = {
     title: "",
     content: "",
     tofinish: "",
-    done: false
+    done: false,
+    adddate: "0"
 }
 const AddTodo = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [todo, setTodo] = useState(initialTodo);
     const { state, dispatch } = useContext(TodoContext);
+    const loading = useRef(false)
     const alertDiv = useRef();
     const sucessDiv = useRef();
     const dateRef = useRef();
@@ -61,10 +63,13 @@ const AddTodo = () => {
 
 
     }
-    const addTodo = async (e) => {
-        alertDiv.current.innerHTML = "Please, make sure you entered all values correctly ...!";
-        alertDiv.current.style.display = "none"
+
+
+    const addTodo = (e) => {
         e.preventDefault();
+
+        alertDiv.current.innerHTML = "Please, make sure you entered all values correctly ...!";
+        alertDiv.current.style.display = "none";
 
         for (const key in todo) {
             if (key === "done") continue
@@ -76,37 +81,46 @@ const AddTodo = () => {
                 return
             }
         }
-        const adddate = new Date().toLocaleString('en-GB').slice(0, -3);
+        const currentDate = new Date(Date.now())
+
         setTodo({
             ...todo,
-            adddate
+            adddate: currentDate.toLocaleString('en-GB').slice(0, -3)
 
         });
 
-        try {
-            const res = await axios.post("/api/todoList", todo);
-            dispatch({ type: "ADD_TODO", payload: res.data });
-            sucessDiv.current.style.display = "block"
-            setTimeout(() => {
-                sucessDiv.current.style.display = "none"
-            }, 2000);
-
-            setTodo(initialTodo);
-            dateRef.current.value=""
-
-        }
-        catch (err) {
-            alertDiv.current.innerHTML = err
-            alertDiv.current.style.display = "block"
-        }
-
-
-
-
-
-
-
+        loading.current = true
     }
+    useEffect(() => {
+
+
+        (async () => {
+            
+            if (loading.current===false) return
+            try {
+                const res = await axios.post("/api/todoList", todo);
+
+                dispatch({ type: "ADD_TODO", payload: res.data });
+
+                sucessDiv.current.style.display = "block";
+
+                setTimeout(() => {
+                    sucessDiv.current.style.display = "none";
+                }, 2000);
+
+                setTodo(initialTodo);
+                dateRef.current.value = ""
+
+            }
+            catch (err) {
+                alertDiv.current.innerHTML = err
+                alertDiv.current.style.display = "block"
+            }
+            finally {
+                loading.current = false
+            }
+        })()
+    }, [todo])
 
     return (
         <div className='bg-u-red pt-10 py-48'>

@@ -75,7 +75,7 @@ const TodoDone = ({ todo }) => {
         setExitDirection("notDoneList");
         const todoId = todo.id;
 
-        await axios.get(`api/todolist/${todoId}/wait`);
+        await axios.put(`api/todolist/${todoId}/wait`,todo);
 
         setIsDelete(true);
 
@@ -155,7 +155,7 @@ const TodoDone = ({ todo }) => {
 
                             <i onClick={notDoneTodo} className="text-white rounded-full fa-solid fa-circle-xmark hover:scale-150 hover:text-blue-600 hover:bg-white duration-500"></i>
                             <i onClick={deleteTodo} className="text-white fa-solid fa-trash hover:scale-150 hover:text-red-600  duration-500"></i>
-                            <i onPointerDown={(e) => drag(e)} className="scale-150 lg:scale-100 lg:cursor-grab text-white fa-solid fa-ellipsis hover:scale-150 hover:text-red-600  duration-500" style={{ touchAction: "none" }} ></i>
+                            <i onPointerDown={(e) => drag(e)} className="scale-150 lg:scale-100 lg:cursor-grab text-white fa-solid fa-up-down" style={{ touchAction: "none" }} ></i>
                         </div>
 
                     </div>
