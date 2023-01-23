@@ -62,12 +62,10 @@ const TodoDone = ({ todo }) => {
     };
     const contentvariants = {
         open: {
-            display: "block",
-            transition: {}
+            display: "block", opacity: 1, y: 0, scale: 1
         },
         closed: {
-            transition: {},
-            transitionEnd: { display: "none" }
+            opacity: [1, -1, 0], y: -80, scale: [1, 0.25, 1], transitionEnd: { display: "none" },            
         }
     };
 

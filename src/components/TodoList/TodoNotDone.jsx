@@ -17,7 +17,7 @@ const TodoNotDone = ({ todo }) => {
         if (!e.target.classList.contains("header")) return
 
         setIsvibleContent(!isVisibleContent);
-        
+
         if (!isVisibleContent) {
             headerRefs.current[0].classList.add("from-pink-500");
             headerRefs.current[0].classList.remove("lg:hover:from-pink-500", "lg:hover:to-blue-600", "from-white");
@@ -60,19 +60,17 @@ const TodoNotDone = ({ todo }) => {
     }
     const contentvariants = {
         open: {
-            display: "block",
-            transition: {}
+            display: "block", opacity: 1, y: 0, scale: 1
         },
         closed: {
-            transition: {},
-            transitionEnd: { display: "none" }
+            opacity: [1, -1, 0], y: -80, scale: [1, 0.25, 1], transitionEnd: { display: "none" },            
         }
     };
     const doneTodo = async () => {
         setExitDirection("doneList");
         const todoId = todo.id;
-        
-        await axios.put(`api/todoList/${todoId}/done`,todo);
+
+        await axios.put(`api/todoList/${todoId}/done`, todo);
 
         setIsDelete(true);
 
@@ -109,14 +107,14 @@ const TodoNotDone = ({ todo }) => {
         <AnimatePresence>
             {!isDelete && (
                 <Reorder.Item
-                    
+
                     as="div"
                     value={todo}
                     id={todo.id}
 
                     dragListener={false}
                     dragControls={controls}
-                    whileDrag={{scale:1.05}}
+                    whileDrag={{ scale: 1.05 }}
                     variants={variants}
                     custom={exitDirection}
 
@@ -132,7 +130,7 @@ const TodoNotDone = ({ todo }) => {
                         else if (exitDirection === "deleteTodo") {
                             return {
                                 opacity: 0,
-                                x: 1000 ,
+                                x: 1000,
                                 transition: {
                                     x: { stiffness: 1000 }
                                 }

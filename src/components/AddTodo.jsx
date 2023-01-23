@@ -95,8 +95,8 @@ const AddTodo = () => {
 
 
         (async () => {
-            
-            if (loading.current===false) return
+
+            if (loading.current === false) return
             try {
                 const res = await axios.post("/api/todoList", todo);
 
@@ -120,7 +120,15 @@ const AddTodo = () => {
                 loading.current = false
             }
         })()
-    }, [todo])
+    }, [todo]);
+    const variants = {
+        open: {
+            display: "block", opacity: 1, y: 0, scale: 1
+        },
+        closed: {
+            opacity: 0, y: -80, scale: 0, transitionEnd: { display: "none" },
+        }
+    }
 
     return (
         <div className='bg-u-red pt-10 py-48'>
@@ -145,7 +153,11 @@ const AddTodo = () => {
                 variants={backroundDiv}
                 animate={isVisible ? "open" : "closed"}
                 className="bg-u-blue py-10 text-center text-white " style={{ minHeight: "200px" }} >
-                <div className='container items-center px-5' style={{ display: `${isVisible ? "block" : "none"}` }} >
+                <motion.div
+                    initial={{ display: "none" }}
+                    variants={variants}
+                    animate={isVisible ? "open" : "closed"}
+                    className='container items-center px-5' style={{ display: `${isVisible ? "block" : "none"}` }} >
                     <form onSubmit={addTodo}>
                         <div className="mx-auto max-w-lg">
                             <div className="py-5">
@@ -183,7 +195,7 @@ const AddTodo = () => {
                         </div>
 
                     </form>
-                </div>
+                </motion.div>
             </motion.div>
 
 
