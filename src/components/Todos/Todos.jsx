@@ -1,29 +1,19 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import TodoNotDoneList from './TodoNotDoneList';
 import TodoDoneList from './TodoDoneList';
 import { TodoContext } from '../../context/TodoState';
-import axios from "axios"
+import axios from "axios";
 
 
 
 const TodoList = () => {
     const { state, dispatch } = useContext(TodoContext);
-
-
+    
     const fetchPost = async () => {
         const res = await axios.get("api/todoList");
-        const todoList = res.data;
-        const todoDoneList = []
-        const todoNotDoneList = []
-        Object.values(todoList).map(todo => {
-            if (todo.done) {
-                todoDoneList.push(todo)
-            }
-            else {
-                todoNotDoneList.push(todo)
-            }
-        })
-        dispatch({ type: "GET_TODO", payload: { todoDoneList: todoDoneList, todoNotDoneList: todoNotDoneList } })
+        const todos = res.data;
+
+        dispatch({ type: "GET_TODO", payload: todos })
 
 
     }
@@ -43,10 +33,8 @@ const TodoList = () => {
             <hr className='border-blue-500' />
             <br />
             <hr className='border-green-500' />
-
-            <TodoNotDoneList />
-            <TodoDoneList />
-
+            <TodoNotDoneList/>
+            <TodoDoneList/>
         </div>
     )
 };

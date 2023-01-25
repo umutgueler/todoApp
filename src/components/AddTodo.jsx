@@ -17,7 +17,6 @@ const AddTodo = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [todo, setTodo] = useState(initialTodo);
     const { state, dispatch } = useContext(TodoContext);
-    const loading = useRef(false)
     const alertDiv = useRef();
     const sucessDiv = useRef();
     const dateRef = useRef();
@@ -25,7 +24,7 @@ const AddTodo = () => {
     const backroundDiv = {
         open: (height = 1000) => ({
             clipPath: `circle(${height * 2}px at ${(window.innerWidth / 2)}px -20px)`,
-            transition: {
+            transition: { 
                 type: "spring",
                 stiffness: 20,
                 restDelta: 2
@@ -65,7 +64,7 @@ const AddTodo = () => {
     }
 
 
-    const addTodo = (e) => {
+    const addTodo = async (e) => {
         e.preventDefault();
 
         alertDiv.current.innerHTML = "Please, make sure you entered all values correctly ...!";
@@ -81,46 +80,29 @@ const AddTodo = () => {
                 return
             }
         }
-        const currentDate = new Date(Date.now())
 
-        setTodo({
-            ...todo,
-            adddate: currentDate.toLocaleString('en-GB').slice(0, -3)
+        try {
+            const res = await axios.post("/api/todoList", { ...todo, adddate: new Date().toLocaleString('en-GB').slice(0, -3) });
 
-        });
+            dispatch({ type: "ADD_TODO", payload: { todo: res.data } });
 
-        loading.current = true
+            sucessDiv.current.style.display = "block";
+
+            setTimeout(() => {
+                sucessDiv.current.style.display = "none";
+            }, 2000);
+
+            setTodo(initialTodo);
+            dateRef.current.value = ""
+
+        }
+        catch (err) {
+            alertDiv.current.innerHTML = err
+            alertDiv.current.style.display = "block"
+        }
+
     }
-    useEffect(() => {
 
-
-        (async () => {
-
-            if (loading.current === false) return
-            try {
-                const res = await axios.post("/api/todoList", todo);
-
-                dispatch({ type: "ADD_TODO", payload: res.data });
-
-                sucessDiv.current.style.display = "block";
-
-                setTimeout(() => {
-                    sucessDiv.current.style.display = "none";
-                }, 2000);
-
-                setTodo(initialTodo);
-                dateRef.current.value = ""
-
-            }
-            catch (err) {
-                alertDiv.current.innerHTML = err
-                alertDiv.current.style.display = "block"
-            }
-            finally {
-                loading.current = false
-            }
-        })()
-    }, [todo]);
     const variants = {
         open: {
             display: "block", opacity: 1, y: 0, scale: 1
@@ -134,7 +116,6 @@ const AddTodo = () => {
         <div className='bg-u-red pt-10 py-48'>
             <div className="container my-10 text-center">
                 <motion.h2
-
                     whileHover={{
                         scale: 1.2,
                         transition: { duration: 0.25 },
@@ -197,12 +178,7 @@ const AddTodo = () => {
                     </form>
                 </motion.div>
             </motion.div>
-
-
-
-
         </div >
-
     )
 }
 

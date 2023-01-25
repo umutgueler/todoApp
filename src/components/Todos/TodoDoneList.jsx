@@ -1,71 +1,73 @@
-import React, { useState, useContext, useEffect, } from 'react'
-import TodoDone from './TodoDone'
-import { motion, useAnimationControls, Reorder } from "framer-motion"
+import React, { useState, useContext, useEffect, } from 'react';
+import TodoDone from './TodoDone';
+import { motion, useAnimationControls, Reorder } from "framer-motion";
 import { TodoContext } from '../../context/TodoState';
-import usePrevious from "../../hooks/usePrevious"
+import usePrevious from "../../hooks/usePrevious";
 
 
+
+const variants = {
+    open: {
+        display: "block",
+        transition: { staggerChildren: 0.5, delayChildren: 0.25 }
+    },
+    closed: {
+        transition: { staggerChildren: 0.05, when: "afterChildren", },
+        transitionEnd: { display: "none" }
+    }
+};
+
+const backroundDiv = {
+    open: (height = 1000) => ({
+        clipPath: `circle(${height * 2}px at ${(window.innerWidth / 2)}px -20px)`,
+        transition: {
+            type: "spring",
+            stiffness: 20,
+            restDelta: 2
+        }
+    }),
+    closed: {
+        clipPath: `circle(60px at ${(window.innerWidth / 2)}px -20px)`,
+        transition: {
+            delay: 0.5,
+            type: "spring",
+            stiffness: 400,
+            damping: 40
+        },
+    }
+};
 
 const TodoDoneList = () => {
-    const [isVisible, setIsVisible] = useState(false);
     const { state, dispatch } = useContext(TodoContext);
+
+    const [isVisible, setIsVisible] = useState(false);
     const [todos, setTodos] = useState([]);
-    const prevTodoDoneListLength = usePrevious(todos.length);
+
+    const prevTodos = usePrevious(todos);
+
     const controls = useAnimationControls();
 
     useEffect(() => {
-        setTodos(state.todoDoneList)
-    }, [state.todoDoneList]);
+        setTodos(
+            state.todos.filter(todo => todo.done === true)
+        )
+    }, [state.todos]);
 
-    const variants = {
-        open: {
-            display: "block",
-            transition: { staggerChildren: 0.5, delayChildren: 0.25 }
-        },
-        closed: {
-            transition: { staggerChildren: 0.05, when: "afterChildren", },
-            transitionEnd: { display: "none" }
-        }
-    };
-    const backroundDiv = {
-        open: (height = 1000) => ({
-            clipPath: `circle(${height * 2}px at ${(window.innerWidth / 2)}px -20px)`,
-            transition: {
-                type: "spring",
-                stiffness: 20,
-                restDelta: 2
-            }
-        }),
-        closed: {
-            clipPath: `circle(60px at ${(window.innerWidth / 2)}px -20px)`,
-            transition: {
-                delay: 0.5,
-                type: "spring",
-                stiffness: 400,
-                damping: 40
-            },
-
-        }
-    };
     useEffect(() => {
-        if (prevTodoDoneListLength === 0) return
-        if (prevTodoDoneListLength < todos.length) {
-
+        if (prevTodos?.length === 0) return
+        if (prevTodos?.length < todos?.length) {
             controls.start({
                 scale: [1, 1.5, 1],
                 transition: { duration: 2 },
             })
         }
-        else if (prevTodoDoneListLength > todos.length) {
-
+        else if (prevTodos?.length > todos?.length) {
             controls.start({
                 scale: [1, 0.75, 1],
                 transition: { duration: 2 },
             })
         }
-
-
-    })
+    }, [todos]);
 
     return (
         <div className='bg-u-red pt-10'>
@@ -96,19 +98,15 @@ const TodoDoneList = () => {
                     variants={variants}
                     animate={isVisible ? "open" : "closed"}           >
                     <Reorder.Group axis='y' onReorder={setTodos} values={todos} >
-                        {(todos).map(todo => {
-
-                            return <TodoDone todo={todo} key={todo.id} />
-
-                        })}
+                        {
+                            todos.map(todo => {
+                                return <TodoDone todo={todo} key={todo.id} />
+                            })
+                        }
                     </Reorder.Group>
                 </motion.div>
             </motion.div>
-
         </div>
-
-
-
     )
 }
 

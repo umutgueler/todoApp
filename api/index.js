@@ -8,8 +8,8 @@ app.use(cors());
 
 // Fake Server
 
-const todoList = {
-    id02bed948: {
+const todoList = [
+    {
         id: "id02bed948",
         title: "ACCUSANTIUM DOLOREMQUE LAUDANT...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
@@ -18,7 +18,7 @@ const todoList = {
         done: false
     },
 
-    idf4feaaaf: {
+    {
         id: "idf4feaaaf",
         title: "ACCUSANTIUM DOLOREMQUE LAUDANT...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
@@ -27,7 +27,7 @@ const todoList = {
         done: false
     },
 
-    ide555496a: {
+    {
         id: "ide555496a",
         title: "ACCUSANTIUM DOLOREMQUE LAUDANT...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
@@ -36,7 +36,7 @@ const todoList = {
         done: false
     },
 
-    id146095f2: {
+    {
         id: "id146095f2",
         title: "DONE TRUEEEEE...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
@@ -45,7 +45,7 @@ const todoList = {
         done: true
     },
 
-    id9349822f: {
+    {
         id: "id9349822f",
         title: "DONE TRUEEE666...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
@@ -54,7 +54,7 @@ const todoList = {
         done: true
     },
 
-    idfaea2d77: {
+    {
         id: "idfaea2d77",
         title: "DONE TRUEEEE...",
         content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, consequatur temporibus dolorem nihil excepturi quos. Amet cupiditate aperiam temporibus perferendis?",
@@ -63,17 +63,17 @@ const todoList = {
         done: true
     },
 
-};
+];
 
 app.get("/api/todoList", (req, res) => {
     res.json(todoList)
 });
 
 app.post("/api/todoList", (req, res) => {
-    
+
     const todo = req.body;
     const id = randomBytes(4).toString("hex");
-    todo.id = "id"+id;
+    todo.id = "id" + id;
     res.json(todo);
 });
 
