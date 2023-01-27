@@ -41,33 +41,32 @@ const TodoNotDoneList = () => {
     const { state, dispatch } = useContext(TodoContext);
 
     const [isVisible, setIsVisible] = useState(false);
-    const [todos, setTodos] = useState([]);
 
-    const prevTodos = usePrevious(todos);
+
+    const prevTodos = usePrevious(state.notDoneTodos);
 
     const controls = useAnimationControls();
 
     useEffect(() => {
-        setTodos(
-            state.todos.filter(todo => todo.done === false)
-        )
-    }, [state.todos]);
-
-    useEffect(() => {
         if (prevTodos?.length === 0) return
-        if (prevTodos?.length < todos.length) {
+        if (prevTodos?.length < state.notDoneTodos.length) {
             controls.start({
                 scale: [1, 1.5, 1],
                 transition: { duration: 2 },
             })
         }
-        else if (prevTodos?.length > todos.length) {
+        else if (prevTodos?.length > state.notDoneTodos.length) {
             controls.start({
                 scale: [1, 0.75, 1],
                 transition: { duration: 2 },
             })
         }
-    },[todos]);
+    }, [state.notDoneTodos]);
+
+    const onReorder = (notDoneTodos) => {
+        console.log(notDoneTodos)
+        dispatch({ type: "SETNOTDONE_TODO", payload: { notDoneTodos } })
+    }
 
     return (
         <div className='bg-u-red pt-10'>
@@ -95,9 +94,9 @@ const TodoNotDoneList = () => {
                     initial={{ display: "none" }}
                     variants={variants}
                     animate={isVisible ? "open" : "closed"}  >
-                    <Reorder.Group axis='y' onReorder={setTodos} values={todos} >
+                    <Reorder.Group axis='y' onReorder={onReorder} values={state.notDoneTodos} >
                         {
-                            todos.map(todo => {
+                            state.notDoneTodos.map(todo => {
                                 return <TodoNotDone todo={todo} key={todo.id} />
                             })
                         }

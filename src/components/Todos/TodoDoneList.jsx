@@ -41,33 +41,30 @@ const TodoDoneList = () => {
     const { state, dispatch } = useContext(TodoContext);
 
     const [isVisible, setIsVisible] = useState(false);
-    const [todos, setTodos] = useState([]);
-
-    const prevTodos = usePrevious(todos);
+    const prevTodos = usePrevious(state.doneTodos);
 
     const controls = useAnimationControls();
 
-    useEffect(() => {
-        setTodos(
-            state.todos.filter(todo => todo.done === true)
-        )
-    }, [state.todos]);
 
     useEffect(() => {
         if (prevTodos?.length === 0) return
-        if (prevTodos?.length < todos?.length) {
+        if (prevTodos?.length < state.doneTodos.length) {
             controls.start({
                 scale: [1, 1.5, 1],
                 transition: { duration: 2 },
             })
         }
-        else if (prevTodos?.length > todos?.length) {
+        else if (prevTodos?.length > state.doneTodos.length) {
             controls.start({
                 scale: [1, 0.75, 1],
                 transition: { duration: 2 },
             })
         }
-    }, [todos]);
+    }, [state.doneTodos]);
+
+    const onReorder = (doneTodos) => {
+        dispatch({ type: "SETDONE_TODO", payload: { doneTodos } })
+    }
 
     return (
         <div className='bg-u-red pt-10'>
@@ -97,9 +94,9 @@ const TodoDoneList = () => {
                     initial={{ display: "none" }}
                     variants={variants}
                     animate={isVisible ? "open" : "closed"}           >
-                    <Reorder.Group axis='y' onReorder={setTodos} values={todos} >
+                    <Reorder.Group axis='y' onReorder={onReorder} values={state.doneTodos} >
                         {
-                            todos.map(todo => {
+                            state.doneTodos.map(todo => {
                                 return <TodoDone todo={todo} key={todo.id} />
                             })
                         }

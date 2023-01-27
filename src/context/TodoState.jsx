@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 
 
 
@@ -14,47 +14,48 @@ const reducer = (state, action) => {
         case "GET_TODO":
             return {
                 ...state,
-                todos: action.payload
-
+                doneTodos: action.payload.doneTodos,
+                notDoneTodos: action.payload.notDoneTodos
             }
-        case "DELETE_TODO":
+        case "DELETENOTDONE_TODO":
             return {
                 ...state,
-                todos: state.todos.filter(todo => todo.id !== action.payload.todoId)
+                notDoneTodos: state.notDoneTodos.filter(todo => todo.id !== action.payload.todoId)
+            }
+        case "DELETEDONE_TODO":
+            return {
+                ...state,
+                doneTodos: state.doneTodos.filter(todo => todo.id !== action.payload.todoId)
             }
         case "ADD_TODO":
-            const copyTodos = [...state.todos];
-            copyTodos.push(action.payload.todo);
             return {
                 ...state,
-                todos: copyTodos
+                notDoneTodos: [...state.notDoneTodos, action.payload.todo]
             }
         case "DONE_TODO": {
-            const { todoId } = action.payload;
-            const copyTodos = [...state.todos];
-            copyTodos.forEach(todo => {
-                if (todo.id === todoId) {
-                    todo.done = true
-                }
-            })
-
             return {
                 ...state,
-                todos: copyTodos
+                notDoneTodos: state.notDoneTodos.filter(todo => todo.id !== action.payload.todoId),
+                doneTodos: [...state.doneTodos, state.notDoneTodos.find(todo => todo.id === action.payload.todoId)]
             }
         }
         case "NOTDONE_TODO": {
-            const { todoId } = action.payload;
-            const copyTodos = [...state.todos];
-            copyTodos.forEach(todo => {
-                if (todo.id === todoId) {
-                    todo.done = false
-                }
-            })
-
             return {
                 ...state,
-                todos: copyTodos
+                doneTodos: state.doneTodos.filter(todo => todo.id !== action.payload.todoId),
+                notDoneTodos: [...state.notDoneTodos, state.doneTodos.find(todo => todo.id === action.payload.todoId)]
+            }
+        }
+        case "SETDONE_TODO": {
+            return {
+                ...state,
+                doneTodos: action.payload.doneTodos
+            }
+        }
+        case "SETNOTDONE_TODO": {
+            return {
+                ...state,
+                notDoneTodos: action.payload.notDoneTodos
             }
         }
         default:
@@ -62,13 +63,17 @@ const reducer = (state, action) => {
     }
 }
 
-const initialState = {
-    todos: []
-}
+
 
 export const TodoProvider = (props) => {
 
+    const initialState = {
+        doneTodos: [],
+        notDoneTodos: [],
+    }
+
     const [state, dispatch] = useReducer(reducer, initialState);
+
 
     return (
         <TodoContext.Provider value={{ state: state, dispatch: dispatch }}>

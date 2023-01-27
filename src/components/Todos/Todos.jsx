@@ -8,12 +8,21 @@ import axios from "axios";
 
 const TodoList = () => {
     const { state, dispatch } = useContext(TodoContext);
-    
+
     const fetchPost = async () => {
         const res = await axios.get("api/todoList");
+        const notDoneTodos = []; const doneTodos = []
         const todos = res.data;
+        todos.forEach((todo) => {
+            if (todo.done === true) {
+                doneTodos.push(todo)
+            }
+            else {
+                notDoneTodos.push(todo)
+            }
+        })
 
-        dispatch({ type: "GET_TODO", payload: todos })
+        dispatch({ type: "GET_TODO", payload: { doneTodos, notDoneTodos } })
 
 
     }
@@ -33,8 +42,8 @@ const TodoList = () => {
             <hr className='border-blue-500' />
             <br />
             <hr className='border-green-500' />
-            <TodoNotDoneList/>
-            <TodoDoneList/>
+            <TodoNotDoneList />
+            <TodoDoneList />
         </div>
     )
 };
